@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct PostsLoadedView: View {
-    typealias Action = () -> Void
+    typealias Action = () async -> Void
 
     private let posts: [PostsViewItems.Post]
     private let events: PostsEvents
@@ -18,10 +18,10 @@ struct PostsLoadedView: View {
                         events.onHapticFeedback(.selection)
                         events.onPostButtonTap(post.id)
                     }
-                    .onFirstAppear {
+                    .onFirstTask(priority: .background) {
                         guard index == (posts.count - 1) else { return }
 
-                        action()
+                        await action()
                     }
             }
         }

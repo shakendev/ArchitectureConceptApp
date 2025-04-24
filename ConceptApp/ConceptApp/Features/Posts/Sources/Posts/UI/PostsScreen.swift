@@ -19,9 +19,7 @@ struct PostsScreen<ViewModel: PostsViewModellable>: View {
             case .loaded(let items):
                 if !items.posts.isEmpty {
                     PostsLoadedView(posts: items.posts, events: events) {
-                        Task(priority: .background) {
-                            await viewModel.loadPosts()
-                        }
+                        await viewModel.loadPosts()
                     }
                 } else {
                     PostsEmptyView()
