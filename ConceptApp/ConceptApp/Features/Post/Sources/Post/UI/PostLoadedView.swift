@@ -23,6 +23,7 @@ struct PostLoadedView<Comments: View>: View {
             }
         }
         .padding(.vertical, 10)
+        .ignoresSafeArea()
     }
 
     init(

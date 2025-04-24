@@ -19,6 +19,7 @@ public struct LoadingErrorView: View {
             }
             .buttonStyle(.borderedProminent)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     public init(action: @escaping Action) {

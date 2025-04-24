@@ -1,10 +1,11 @@
 import Core
+import Foundation
 import MelonKit
 
 @MainActor
 protocol PostRemoteFetchable: AnyObject {
-    func loadPost(for id: Int) async throws(MLNNetworkError) -> PostModel
-    func loadComments(for id: Int) async throws(MLNNetworkError) -> CommentsModel
+    func loadPost(for postID: Int) async throws(MLNNetworkError) -> PostModel
+    func loadComments(for postID: Int) async throws(MLNNetworkError) -> CommentsModel
 }
 
 final class PostRemoteFetcher<Config: MLNNetworkConfigurable, Network: MLNNetworkManageable>: PostRemoteFetchable {
@@ -16,8 +17,9 @@ final class PostRemoteFetcher<Config: MLNNetworkConfigurable, Network: MLNNetwor
         self.network = network
     }
 
-    func loadPost(for id: Int) async throws(MLNNetworkError) -> PostModel {
-        guard let url = config.getURL(for: .posts, appending: "/\(id)") else { throw .invalidURL }
+    func loadPost(for postID: Int) async throws(MLNNetworkError) -> PostModel {
+        let path = "/\(postID)"
+        guard let url = config.getURL(for: .posts, appending: path) else { throw .invalidURL }
         let headers = configureHeaders()
 
         do {
@@ -31,8 +33,9 @@ final class PostRemoteFetcher<Config: MLNNetworkConfigurable, Network: MLNNetwor
         }
     }
 
-    func loadComments(for id: Int) async throws(MLNNetworkError) -> CommentsModel {
-        guard let url = config.getURL(for: .posts, appending: "/\(id)/comments") else { throw .invalidURL }
+    func loadComments(for postID: Int) async throws(MLNNetworkError) -> CommentsModel {
+        let path = "\(postID)"
+        guard let url = config.getURL(for: .comments, appending: path) else { throw .invalidURL }
         let headers = configureHeaders()
 
         do {

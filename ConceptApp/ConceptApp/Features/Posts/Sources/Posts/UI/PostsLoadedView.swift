@@ -1,8 +1,11 @@
 import SwiftUI
 
 struct PostsLoadedView: View {
+    typealias Action = () -> Void
+
     private let posts: [PostsViewItems.Post]
     private let events: PostsEvents
+    private let action: Action
 
     var body: some View {
         List {
@@ -15,13 +18,23 @@ struct PostsLoadedView: View {
                         events.onHapticFeedback(.selection)
                         events.onPostButtonTap(post.id)
                     }
+                    .onFirstAppear {
+                        guard index == (posts.count - 1) else { return }
+
+                        action()
+                    }
             }
         }
     }
 
-    init(posts: [PostsViewItems.Post], events: PostsEvents) {
+    init(
+        posts: [PostsViewItems.Post],
+        events: PostsEvents,
+        load action: @escaping Action
+    ) {
         self.posts = posts
         self.events = events
+        self.action = action
     }
 }
 

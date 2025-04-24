@@ -1,7 +1,7 @@
 import Foundation
 
 struct PostsViewItems {
-    let posts: [Post]
+    var posts: [Post]
 }
 
 extension PostsViewItems {

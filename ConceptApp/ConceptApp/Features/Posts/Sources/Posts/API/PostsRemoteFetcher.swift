@@ -1,9 +1,10 @@
 import Core
+import Foundation
 import MelonKit
 
 @MainActor
 protocol PostsRemoteFetchable: AnyObject {
-    func loadPosts() async throws(MLNNetworkError) -> PostsModel
+    func loadPosts(skip skippedPosts: Int, with limit: Int) async throws(MLNNetworkError) -> PostsModel
 }
 
 final class PostsRemoteFetcher<Config: MLNNetworkConfigurable, Network: MLNNetworkManageable>: PostsRemoteFetchable {
@@ -15,8 +16,12 @@ final class PostsRemoteFetcher<Config: MLNNetworkConfigurable, Network: MLNNetwo
         self.network = network
     }
 
-    func loadPosts() async throws(MLNNetworkError) -> PostsModel {
-        guard let url = config.getURL(for: .posts) else { throw .invalidURL }
+    func loadPosts(skip skippedPosts: Int, with limit: Int) async throws(MLNNetworkError) -> PostsModel {
+        let items = [
+             URLQueryItem(name: "limit", value: "\(limit)"),
+             URLQueryItem(name: "skip", value: "\(skippedPosts)")
+        ]
+        guard let url = config.getURL(for: .posts, using: items) else { throw .invalidURL }
         let headers = configureHeaders()
 
         do {

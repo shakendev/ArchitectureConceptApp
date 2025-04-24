@@ -6,17 +6,26 @@ struct CommentsModel {
 
 extension CommentsModel {
     struct Comment {
+        let postID: Int
         let id: Int
-        let name: String
-        let email: String
-        let body: String
+        let body :String
+        let likes: Int
+        let username: String
+        let fullname: String
     }
 }
 
 extension CommentsModel {
     func mapToViewItems() -> CommentsViewItems {
         let comments = comments.map {
-            CommentsViewItems.Comment(id: $0.id, name: $0.name, email: $0.email, body: $0.body)
+            CommentsViewItems.Comment(
+                postID: $0.postID,
+                id: $0.id,
+                body: $0.body,
+                likes: $0.likes,
+                username: "@\($0.username)",
+                fullname: $0.fullname
+            )
         }
 
         return .init(comments: comments)

@@ -6,9 +6,11 @@ struct CommentsViewItems {
 
 extension CommentsViewItems {
     struct Comment {
+        let postID: Int
         let id: Int
-        let name: String
-        let email: String
-        let body: String
+        let body :String
+        let likes: Int
+        let username: String
+        let fullname: String
     }
 }

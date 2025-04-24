@@ -11,14 +11,18 @@ struct PostsScreen<ViewModel: PostsViewModellable>: View {
             case .loading:
                 PostsLoadingView()
             case .connectionError:
-                ConnectionErrorView(action: reload)
+                ConnectionErrorView(action: reloadPosts)
                     .onAppear { events.onHapticFeedback(.error) }
             case .loadingError:
-                LoadingErrorView(action: reload)
+                LoadingErrorView(action: reloadPosts)
                     .onAppear { events.onHapticFeedback(.error) }
             case .loaded(let items):
                 if !items.posts.isEmpty {
-                    PostsLoadedView(posts: items.posts, events: events)
+                    PostsLoadedView(posts: items.posts, events: events) {
+                        Task(priority: .background) {
+                            await viewModel.loadPosts()
+                        }
+                    }
                 } else {
                     PostsEmptyView()
                 }
@@ -34,7 +38,7 @@ struct PostsScreen<ViewModel: PostsViewModellable>: View {
         self.events = events
     }
 
-    private func reload() {
+    private func reloadPosts() {
         events.onHapticFeedback(.light(intensity: .strong))
 
         Task(priority: .background) {

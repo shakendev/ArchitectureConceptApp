@@ -1,6 +1,17 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "PFCommentsIsNotExistTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No comments"
+          }
+        }
+      }
+    },
     "PFCommentsSectionTitle" : {
       "extractionState" : "manual",
       "localizations" : {

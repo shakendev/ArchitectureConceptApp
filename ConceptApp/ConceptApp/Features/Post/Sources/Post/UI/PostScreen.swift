@@ -11,10 +11,10 @@ struct PostScreen<ViewModel: PostViewModellable>: View {
             case .loading:
                 PostLoadingView()
             case .connectionError:
-                ConnectionErrorView(action: reload)
+                ConnectionErrorView(action: reloadPost)
                     .onAppear { events.onHapticFeedback(.error) }
             case .loadingError:
-                LoadingErrorView(action: reload)
+                LoadingErrorView(action: reloadPost)
                     .onAppear { events.onHapticFeedback(.error) }
             case .loaded(let post):
                 PostLoadedView(post: post, events: events) {
@@ -22,9 +22,11 @@ struct PostScreen<ViewModel: PostViewModellable>: View {
                     case .loading:
                         CommentsLoadingView()
                     case .connectionError:
-                        Text("Connection Error")
+                        ConnectionErrorView(action: reloadComments)
+                            .onAppear { events.onHapticFeedback(.error) }
                     case .loadingError:
-                        Text("Loading Error")
+                        LoadingErrorView(action: reloadComments)
+                            .onAppear { events.onHapticFeedback(.error) }
                     case .loaded(let items):
                         CommentsLoadedView(comments: items.comments)
                     }
@@ -56,11 +58,19 @@ struct PostScreen<ViewModel: PostViewModellable>: View {
         self.events = events
     }
 
-    private func reload() {
+    private func reloadPost() {
         events.onHapticFeedback(.light(intensity: .strong))
 
         Task(priority: .background) {
             await viewModel.reloadPost()
+        }
+    }
+
+    private func reloadComments() {
+        events.onHapticFeedback(.light(intensity: .strong))
+
+        Task(priority: .background) {
+            await viewModel.reloadComments()
         }
     }
 }
