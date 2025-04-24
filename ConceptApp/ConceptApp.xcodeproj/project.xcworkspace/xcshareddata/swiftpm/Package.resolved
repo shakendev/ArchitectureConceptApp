@@ -1,0 +1,24 @@
+{
+  "originHash" : "93268d836f2578089e28c7331bbb9e0ad409524ed7c80977e0a68c6873cd8cef",
+  "pins" : [
+    {
+      "identity" : "melonkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Melon-Fashion-Group/MelonKit",
+      "state" : {
+        "revision" : "5fe1bc7b4aae3516777995c0875a8bb2cfbdbc2b",
+        "version" : "1.1.1"
+      }
+    },
+    {
+      "identity" : "melonui",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Melon-Fashion-Group/MelonUI",
+      "state" : {
+        "revision" : "9fbe66dd44918aac27583c609c16905264a2f877",
+        "version" : "1.0.0"
+      }
+    }
+  ],
+  "version" : 3
+}
