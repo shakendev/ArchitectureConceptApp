@@ -47,8 +47,7 @@ struct ConceptAppApp: App {
     private func composePostScreen(id: Int) {
         let composer = PostComposer(resolver: container)
         let feedback = container.resolve(BasicHapticFeedback<MLNHapticFeedback>.self)
-        let events = PostEvents(
-            onHapticFeedback: feedback.generate) { stackStore.pop() }
+        let events = PostEvents(onHapticFeedback: feedback.generate) { stackStore.pop() }
         let feature = composer.compose(context: .init(id: id, events: events))
         let item = MLNNavigationStackItem(view: feature.screen)
 

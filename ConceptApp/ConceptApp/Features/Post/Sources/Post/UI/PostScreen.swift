@@ -7,7 +7,7 @@ struct PostScreen<ViewModel: PostViewModellable>: View {
 
     var body: some View {
         NavigationBar(title: "PFNavigationBarTitle", bundle: .module) {
-            switch viewModel.state {
+            switch viewModel.postState {
             case .loading:
                 PostLoadingView()
             case .connectionError:
@@ -16,18 +16,21 @@ struct PostScreen<ViewModel: PostViewModellable>: View {
             case .loadingError:
                 LoadingErrorView(action: reload)
                     .onAppear { events.onHapticFeedback(.error) }
-            case .loaded:
-                if let post = viewModel.postViewItems {
-                    PostLoadedView(
-                        post: post,
-                        comments: viewModel.commentsViewItems?.comments,
-                        events: events
-                    )
-                    .onFirstTask(priority: .background) {
-                        await viewModel.loadComments()
+            case .loaded(let post):
+                PostLoadedView(post: post, events: events) {
+                    switch viewModel.commentsState {
+                    case .loading:
+                        CommentsLoadingView()
+                    case .connectionError:
+                        Text("Connection Error")
+                    case .loadingError:
+                        Text("Loading Error")
+                    case .loaded(let items):
+                        CommentsLoadedView(comments: items.comments)
                     }
-                } else {
-                    PostEmptyView()
+                }
+                .onFirstTask(priority: .background) {
+                    await viewModel.loadComments()
                 }
             }
         } leadingBarItem: {

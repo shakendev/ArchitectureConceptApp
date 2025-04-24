@@ -2,34 +2,24 @@ import SharedUI
 import SwiftUI
 import MelonUI
 
-struct PostLoadedView: View {
+struct PostLoadedView<Comments: View>: View {
     private let post: PostViewItems
-    private let comments: [CommentsViewItems.Comment]?
     private let events: PostEvents
+
+    private let comments: Comments
 
     var body: some View {
         VStack(spacing: 20) {
             postView(post: post)
                 .padding(.horizontal, 16)
 
-            if let comments {
-                VStack(alignment: .leading, spacing: .zero) {
-                    MLNMarkdownText(separator: .empty, .text("PFCommentsSectionTitle", bundle: .module))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .font(.system(size: 20, weight: .black, design: .rounded))
-                        .padding(.horizontal, 16)
+            VStack(alignment: .leading, spacing: .zero) {
+                MLNMarkdownText(separator: .empty, .text("PFCommentsSectionTitle", bundle: .module))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .font(.system(size: 20, weight: .black, design: .rounded))
+                    .padding(.horizontal, 16)
 
-                    List {
-                        ForEach(comments.indices, id: \.self) { index in
-                            let comment = comments[index]
-
-                            commentView(comment: comment)
-                        }
-                    }
-                    .listStyle(.plain)
-                }
-            } else {
-                Spacer()
+                comments
             }
         }
         .padding(.vertical, 10)
@@ -37,12 +27,12 @@ struct PostLoadedView: View {
 
     init(
         post: PostViewItems,
-        comments: [CommentsViewItems.Comment]?,
-        events: PostEvents
+        events: PostEvents,
+        @ViewBuilder comments: () -> Comments
     ) {
         self.post = post
-        self.comments = comments
         self.events = events
+        self.comments = comments()
     }
 }
 
@@ -66,32 +56,6 @@ extension PostLoadedView {
             Text(post.body)
                 .font(.system(size: 13, weight: .light, design: .rounded))
                 .multilineTextAlignment(.leading)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
-    private func commentView(comment: CommentsViewItems.Comment) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack(alignment: .firstTextBaseline, spacing: 10) {
-                Text(comment.name)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
-                    .lineLimit(1)
-                    .multilineTextAlignment(.leading)
-
-                Text(comment.id.formatted())
-                    .font(.system(size: 15, weight: .semibold, design: .rounded))
-            }
-
-            VStack(alignment: .leading, spacing: 6) {
-                Text(comment.body)
-                    .font(.system(size: 13, weight: .light, design: .rounded))
-                    .multilineTextAlignment(.leading)
-
-                Text(comment.email)
-                    .font(.system(size: 10, weight: .regular, design: .rounded))
-                    .multilineTextAlignment(.leading)
-            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }

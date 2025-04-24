@@ -10,6 +10,7 @@ struct PostsLoadedView: View {
                 let post = posts[index]
 
                 postView(post: post)
+                    .contentShape(.rect)
                     .onTapGesture {
                         events.onHapticFeedback(.selection)
                         events.onPostButtonTap(post.id)

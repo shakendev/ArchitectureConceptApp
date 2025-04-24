@@ -6,7 +6,8 @@ import PackageDescription
 let package = Package(
     name: "Core",
     platforms: [
-        .iOS(.v18)
+        .iOS(.v18),
+        .macCatalyst(.v18)
     ],
     products: [
         .library(

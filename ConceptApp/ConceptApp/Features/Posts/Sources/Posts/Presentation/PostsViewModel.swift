@@ -2,9 +2,16 @@ import Core
 import Observation
 import MelonKit
 
+enum PostsState {
+    case loading
+    case connectionError
+    case loadingError
+    case loaded(PostsViewItems)
+}
+
 @MainActor
-protocol PostsViewModellable: Observable, ScreenStateable {
-    var viewItems: PostsViewItems? { get }
+protocol PostsViewModellable: Observable {
+    var state: PostsState { get }
 
     func loadPosts() async
     func reloadPosts() async
@@ -12,8 +19,7 @@ protocol PostsViewModellable: Observable, ScreenStateable {
 
 @Observable
 final class PostsViewModel<RemoteFetcher: PostsRemoteFetchable>: PostsViewModellable {
-    private(set) var state: ScreenState = .loading
-    @ObservationIgnored private(set) var viewItems: PostsViewItems?
+    private(set) var state: PostsState = .loading
 
     private let fetcher: RemoteFetcher
 
@@ -26,8 +32,7 @@ final class PostsViewModel<RemoteFetcher: PostsRemoteFetchable>: PostsViewModell
             let model = try await fetcher.loadPosts()
             let viewItems = model.mapToViewItems()
 
-            self.viewItems = viewItems
-            state = .loaded
+            state = .loaded(viewItems)
         } catch {
             state = switch error {
             case .vpnEnabled: .connectionError

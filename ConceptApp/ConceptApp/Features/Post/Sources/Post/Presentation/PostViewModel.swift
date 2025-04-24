@@ -2,21 +2,35 @@ import Core
 import Observation
 import MelonKit
 
+enum PostState {
+    case loading
+    case connectionError
+    case loadingError
+    case loaded(PostViewItems)
+}
+
+enum CommentsState {
+    case loading
+    case connectionError
+    case loadingError
+    case loaded(CommentsViewItems)
+}
+
 @MainActor
-protocol PostViewModellable: Observable, ScreenStateable {
-    var postViewItems: PostViewItems? { get }
-    var commentsViewItems: CommentsViewItems? { get }
+protocol PostViewModellable: Observable {
+    var postState: PostState { get }
+    var commentsState: CommentsState { get }
 
     func loadPost() async
     func reloadPost() async
     func loadComments() async
+    func reloadComments() async
 }
 
 @Observable
 final class PostViewModel<RemoteFetcher: PostRemoteFetchable>: PostViewModellable {
-    private(set) var state: ScreenState = .loading
-    @ObservationIgnored private(set) var postViewItems: PostViewItems?
-    private(set) var commentsViewItems: CommentsViewItems?
+    private(set) var postState: PostState = .loading
+    private(set) var commentsState: CommentsState = .loading
 
     private let postID: Int
     private let fetcher: RemoteFetcher
@@ -31,10 +45,9 @@ final class PostViewModel<RemoteFetcher: PostRemoteFetchable>: PostViewModellabl
             let model = try await fetcher.loadPost(for: postID)
             let viewItems = model.mapToViewItems()
 
-            postViewItems = viewItems
-            state = .loaded
+            postState = .loaded(viewItems)
         } catch {
-            state = switch error {
+            postState = switch error {
             case .vpnEnabled: .connectionError
             default: .loadingError
             }
@@ -42,14 +55,26 @@ final class PostViewModel<RemoteFetcher: PostRemoteFetchable>: PostViewModellabl
     }
 
     func reloadPost() async {
-        state = .loading
+        postState = .loading
         await loadPost()
     }
 
     func loadComments() async {
-        let model = try? await fetcher.loadComments(for: postID)
-        let viewItems = model?.mapToViewItems()
+        do {
+            let model = try await fetcher.loadComments(for: postID)
+            let viewItems = model.mapToViewItems()
 
-        commentsViewItems = viewItems
+            commentsState = .loaded(viewItems)
+        } catch {
+            commentsState = switch error {
+            case .vpnEnabled: .connectionError
+            default: .loadingError
+            }
+        }
+    }
+
+    func reloadComments() async {
+        commentsState = .loading
+        await loadComments()
     }
 }
