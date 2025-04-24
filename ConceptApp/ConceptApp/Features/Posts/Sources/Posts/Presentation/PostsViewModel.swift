@@ -36,15 +36,16 @@ final class PostsViewModel<RemoteFetcher: PostsRemoteFetchable>: PostsViewModell
             let model = try await fetcher.loadPosts(skip: loadedPosts, with: limitPosts)
             let loadedViewItems = model.mapToViewItems()
 
-            if self.viewItems != nil {
-                loadedViewItems.posts.forEach { self.viewItems?.posts.append($0) }
+            if viewItems.isNil {
+                viewItems = loadedViewItems
             } else {
-                self.viewItems = loadedViewItems
+                viewItems?.posts.append(contentsOf: loadedViewItems.posts)
             }
 
-            guard let viewItems = self.viewItems else { return }
-            loadedPosts += limitPosts
-            state = .loaded(viewItems)
+            if let viewItems = self.viewItems {
+                loadedPosts += limitPosts
+                state = .loaded(viewItems)
+            }
         } catch {
             state = switch error {
             case .vpnEnabled: .connectionError

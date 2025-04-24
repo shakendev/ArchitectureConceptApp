@@ -12,3 +12,7 @@ extension PostsViewItems {
         let body: String
     }
 }
+
+extension PostsViewItems? {
+    var isNil: Bool { self == nil }
+}
