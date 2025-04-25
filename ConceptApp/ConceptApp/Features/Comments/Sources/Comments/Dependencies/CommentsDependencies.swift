@@ -2,15 +2,13 @@ import Core
 import MelonKit
 
 @MainActor
-struct PostDependencies {
-    let fetcher: PostRemoteFetcher<NetworkConfig, MLNNetworkManager>
-    let feedback: BasicHapticFeedback<MLNHapticFeedback>
+struct CommentsDependencies {
+    let fetcher: CommentsRemoteFetcher<NetworkConfig, MLNNetworkManager>
 
     init<Resolver: MLNResolvableContainer>(resolver: Resolver) {
         let config = resolver.resolve(NetworkConfig.self)
         let network = resolver.resolve(MLNNetworkManager.self)
 
         fetcher = .init(config: config, network: network)
-        feedback = resolver.resolve(BasicHapticFeedback.self)
     }
 }

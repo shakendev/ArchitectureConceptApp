@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		588071092DBB8DEA008CCAD9 /* Comments in Frameworks */ = {isa = PBXBuildFile; productRef = 588071082DBB8DEA008CCAD9 /* Comments */; };
 		58AA7FF52DBA7D2D00C8FF7D /* Posts in Frameworks */ = {isa = PBXBuildFile; productRef = 58AA7FF42DBA7D2D00C8FF7D /* Posts */; };
 		58AA7FF72DBA7D3200C8FF7D /* SharedUI in Frameworks */ = {isa = PBXBuildFile; productRef = 58AA7FF62DBA7D3200C8FF7D /* SharedUI */; };
 		58AA7FF92DBA7D3600C8FF7D /* Post in Frameworks */ = {isa = PBXBuildFile; productRef = 58AA7FF82DBA7D3600C8FF7D /* Post */; };
@@ -25,6 +26,7 @@
 			membershipExceptions = (
 				Core/Core,
 				"Design System/SharedUI",
+				Features/Comments,
 				Features/Post,
 				Features/Posts,
 			);
@@ -50,6 +52,7 @@
 			files = (
 				58AA80262DBA91CC00C8FF7D /* MelonUI in Frameworks */,
 				58AA7FF92DBA7D3600C8FF7D /* Post in Frameworks */,
+				588071092DBB8DEA008CCAD9 /* Comments in Frameworks */,
 				58AA80232DBA91C600C8FF7D /* MelonKit in Frameworks */,
 				58AA7FF52DBA7D2D00C8FF7D /* Posts in Frameworks */,
 				58AA7FF72DBA7D3200C8FF7D /* SharedUI in Frameworks */,
@@ -110,6 +113,7 @@
 				58AA7FFB2DBA7E1C00C8FF7D /* Core */,
 				58AA80222DBA91C600C8FF7D /* MelonKit */,
 				58AA80252DBA91CC00C8FF7D /* MelonUI */,
+				588071082DBB8DEA008CCAD9 /* Comments */,
 			);
 			productName = ConceptApp;
 			productReference = 58AA7F672DBA3F8800C8FF7D /* ConceptApp.app */;
@@ -408,6 +412,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		588071082DBB8DEA008CCAD9 /* Comments */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Comments;
+		};
 		58AA7FF42DBA7D2D00C8FF7D /* Posts */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Posts;

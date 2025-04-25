@@ -2,12 +2,13 @@ import SharedUI
 import SwiftUI
 
 struct PostScreen<ViewModel: PostViewModellable>: View {
+    private let commentsScreen: AnyView
     @State private var viewModel: ViewModel
     private let events: PostEvents
 
     var body: some View {
         NavigationBar(title: "PFNavigationBarTitle", bundle: .module) {
-            switch viewModel.postState {
+            switch viewModel.state {
             case .loading:
                 PostLoadingView()
             case .connectionError:
@@ -18,21 +19,7 @@ struct PostScreen<ViewModel: PostViewModellable>: View {
                     .onAppear { events.onHapticFeedback(.error) }
             case .loaded(let post):
                 PostLoadedView(post: post, events: events) {
-                    switch viewModel.commentsState {
-                    case .loading:
-                        CommentsLoadingView()
-                    case .connectionError:
-                        ConnectionErrorView(action: reloadComments)
-                            .onAppear { events.onHapticFeedback(.error) }
-                    case .loadingError:
-                        LoadingErrorView(action: reloadComments)
-                            .onAppear { events.onHapticFeedback(.error) }
-                    case .loaded(let items):
-                        CommentsLoadedView(comments: items.comments)
-                    }
-                }
-                .onFirstTask(priority: .background) {
-                    await viewModel.loadComments()
+                    commentsScreen
                 }
             }
         } leadingBarItem: {
@@ -53,7 +40,12 @@ struct PostScreen<ViewModel: PostViewModellable>: View {
         }
     }
 
-    init(viewModel: ViewModel, events: PostEvents) {
+    init(
+        comments commentsScreen: AnyView,
+        viewModel: ViewModel,
+        events: PostEvents
+    ) {
+        self.commentsScreen = commentsScreen
         self.viewModel = viewModel
         self.events = events
     }
@@ -63,14 +55,6 @@ struct PostScreen<ViewModel: PostViewModellable>: View {
 
         Task(priority: .background) {
             await viewModel.reloadPost()
-        }
-    }
-
-    private func reloadComments() {
-        events.onHapticFeedback(.light(intensity: .strong))
-
-        Task(priority: .background) {
-            await viewModel.reloadComments()
         }
     }
 }

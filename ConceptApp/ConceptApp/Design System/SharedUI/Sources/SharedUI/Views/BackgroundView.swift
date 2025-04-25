@@ -5,7 +5,7 @@ public struct BackgroundView<Content: View>: View {
     private let content: Content
 
     public var body: some View {
-        MLNBackgroundView(color: .orange.opacity(0.5)) {
+        MLNBackgroundView(color: .white) {
             content
         }
     }

@@ -2,24 +2,24 @@ import Core
 import Observation
 import MelonKit
 
-enum PostState {
+enum CommentsState {
     case loading
     case connectionError
     case loadingError
-    case loaded(PostViewItems)
+    case loaded(CommentsViewItems)
 }
 
 @MainActor
-protocol PostViewModellable: Observable {
-    var state: PostState { get }
+protocol CommentsViewModellable: Observable {
+    var state: CommentsState { get }
 
-    func loadPost() async
-    func reloadPost() async
+    func loadComments() async
+    func reloadComments() async
 }
 
 @Observable
-final class PostViewModel<RemoteFetcher: PostRemoteFetchable>: PostViewModellable {
-    private(set) var state: PostState = .loading
+final class CommentsViewModel<RemoteFetcher: CommentsRemoteFetchable>: CommentsViewModellable {
+    private(set) var state: CommentsState = .loading
 
     private let postID: Int
     private let fetcher: RemoteFetcher
@@ -29,9 +29,9 @@ final class PostViewModel<RemoteFetcher: PostRemoteFetchable>: PostViewModellabl
         self.fetcher = fetcher
     }
 
-    func loadPost() async {
+    func loadComments() async {
         do {
-            let model = try await fetcher.loadPost(for: postID)
+            let model = try await fetcher.loadComments(for: postID)
             let viewItems = model.mapToViewItems()
 
             state = .loaded(viewItems)
@@ -43,8 +43,8 @@ final class PostViewModel<RemoteFetcher: PostRemoteFetchable>: PostViewModellabl
         }
     }
 
-    func reloadPost() async {
+    func reloadComments() async {
         state = .loading
-        await loadPost()
+        await loadComments()
     }
 }

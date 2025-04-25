@@ -4,33 +4,31 @@
 import PackageDescription
 
 let package = Package(
-    name: "Post",
+    name: "Comments",
     platforms: [
         .iOS(.v18),
         .macCatalyst(.v18)
     ],
     products: [
         .library(
-            name: "Post",
-            targets: ["Post"]
+            name: "Comments",
+            targets: ["Comments"]
         )
     ],
     dependencies: [
         .package(name: "Core", path: "../Core/Core"),
         .package(url: "https://github.com/Melon-Fashion-Group/MelonKit", from: "1.0.0"),
         .package(url: "https://github.com/Melon-Fashion-Group/MelonUI", from: "1.0.0"),
-        .package(name: "SharedUI", path: "../Design System/SharedUI"),
-        .package(name: "Comments", path: "../Comments/Comments")
+        .package(name: "SharedUI", path: "../Design System/SharedUI")
     ],
     targets: [
         .target(
-            name: "Post",
+            name: "Comments",
             dependencies: [
                 .product(name: "Core", package: "Core"),
                 .product(name: "MelonKit", package: "MelonKit"),
                 .product(name: "MelonUI", package: "MelonUI"),
-                .product(name: "SharedUI", package: "SharedUI"),
-                .product(name: "Comments", package: "Comments")
+                .product(name: "SharedUI", package: "SharedUI")
             ]
         )
     ],

@@ -3,11 +3,11 @@ import Foundation
 import MelonKit
 
 @MainActor
-protocol PostRemoteFetchable: AnyObject {
-    func loadPost(for postID: Int) async throws(MLNNetworkError) -> PostModel
+protocol CommentsRemoteFetchable: AnyObject {
+    func loadComments(for postID: Int) async throws(MLNNetworkError) -> CommentsModel
 }
 
-final class PostRemoteFetcher<Config: MLNNetworkConfigurable, Network: MLNNetworkManageable>: PostRemoteFetchable {
+final class CommentsRemoteFetcher<Config: MLNNetworkConfigurable, Network: MLNNetworkManageable>: CommentsRemoteFetchable {
     private let config: Config
     private let network: Network
 
@@ -16,13 +16,13 @@ final class PostRemoteFetcher<Config: MLNNetworkConfigurable, Network: MLNNetwor
         self.network = network
     }
 
-    func loadPost(for postID: Int) async throws(MLNNetworkError) -> PostModel {
-        let path = "/\(postID)"
-        guard let url = config.getURL(for: .posts, appending: path) else { throw .invalidURL }
+    func loadComments(for postID: Int) async throws(MLNNetworkError) -> CommentsModel {
+        let path = "\(postID)"
+        guard let url = config.getURL(for: .comments, appending: path) else { throw .invalidURL }
         let headers = configureHeaders()
 
         do {
-            let dto: PostDTO = try await network.request(
+            let dto: CommentsDTO = try await network.request(
                 .get, timeout: HTTPTimeouts.url, for: url, with: headers, using: nil
             )
 
