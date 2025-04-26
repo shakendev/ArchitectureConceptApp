@@ -34,17 +34,17 @@ final class PostsViewModel<RemoteFetcher: PostsRemoteFetchable>: PostsViewModell
     func loadPosts() async {
         do {
             let model = try await fetcher.loadPosts(skip: loadedPosts, with: limitPosts)
-            let loadedViewItems = model.mapToViewItems()
+            let viewItems = model.mapToViewItems()
 
-            if viewItems.isNil {
-                viewItems = loadedViewItems
+            if self.viewItems.isNil {
+                self.viewItems = viewItems
             } else {
-                viewItems?.posts.append(contentsOf: loadedViewItems.posts)
+                self.viewItems?.posts.append(contentsOf: viewItems.posts)
             }
 
-            if let viewItems = self.viewItems {
+            if let loadedViewItems = self.viewItems {
                 loadedPosts += limitPosts
-                state = .loaded(viewItems)
+                state = .loaded(loadedViewItems)
             }
         } catch {
             state = switch error {
