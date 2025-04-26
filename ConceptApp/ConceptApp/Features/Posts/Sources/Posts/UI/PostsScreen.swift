@@ -18,7 +18,7 @@ struct PostsScreen<ViewModel: PostsViewModellable>: View {
                     .onAppear { events.onHapticFeedback(.error) }
             case .loaded(let items):
                 if !items.posts.isEmpty {
-                    PostsLoadedView(posts: items.posts, events: events) {
+                    PostsLoadedView(items: items, events: events) {
                         await viewModel.loadPosts()
                     }
                 } else {

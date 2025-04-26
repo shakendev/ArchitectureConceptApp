@@ -2,6 +2,7 @@ import Foundation
 
 struct PostsViewItems {
     var posts: [Post]
+    let total: Int
 }
 
 extension PostsViewItems {

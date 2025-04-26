@@ -2,6 +2,7 @@ import Foundation
 
 struct PostsModel {
     let posts: [Post]
+    let total: Int
 }
 
 extension PostsModel {
@@ -19,6 +20,6 @@ extension PostsModel {
             PostsViewItems.Post(userID: $0.userID, id: $0.id, title: $0.title, body: $0.body)
         }
 
-        return .init(posts: posts)
+        return .init(posts: posts, total: total)
     }
 }

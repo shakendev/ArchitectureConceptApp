@@ -3,12 +3,14 @@ import SwiftUI
 struct PostsLoadedView: View {
     typealias Action = () async -> Void
 
-    private let posts: [PostsViewItems.Post]
+    private let items: PostsViewItems
     private let events: PostsEvents
-    private let action: Action
+    private let loadAction: Action
 
     var body: some View {
         List {
+            let posts = items.posts
+
             ForEach(posts.indices, id: \.self) { index in
                 let post = posts[index]
 
@@ -19,22 +21,22 @@ struct PostsLoadedView: View {
                         events.onPostButtonTap(post.id)
                     }
                     .onFirstTask(priority: .background) {
-                        guard index == (posts.count - 1) else { return }
+                        guard posts.count < items.total, index == (posts.count - 1) else { return }
 
-                        await action()
+                        await loadAction()
                     }
             }
         }
     }
 
     init(
-        posts: [PostsViewItems.Post],
+        items: PostsViewItems,
         events: PostsEvents,
-        load action: @escaping Action
+        load loadAction: @escaping Action
     ) {
-        self.posts = posts
+        self.items = items
         self.events = events
-        self.action = action
+        self.loadAction = loadAction
     }
 }
 

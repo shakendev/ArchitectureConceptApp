@@ -21,8 +21,8 @@ protocol PostsViewModellable: Observable {
 final class PostsViewModel<RemoteFetcher: PostsRemoteFetchable>: PostsViewModellable {
     private(set) var state: PostsState = .loading
 
-    private var loadedPosts: Int = .zero
-    private var viewItems: PostsViewItems?
+    @ObservationIgnored private var loadedPosts: Int = .zero
+    @ObservationIgnored private var viewItems: PostsViewItems?
 
     private let fetcher: RemoteFetcher
     private let limitPosts = 10
