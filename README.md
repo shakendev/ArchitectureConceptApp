@@ -1,4 +1,4 @@
-# Architecture Concept App
+# Composition Root Architecture Concept
 
 An example of implementing a clean architecture according to Uncle Bob using DTO, Composition Root & MVVM patterns.
 
